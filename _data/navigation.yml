@@ -1,6 +1,11 @@
 # Site navigation links
 
-- title:
-  url:
-  excerpt:
-  image:
+- title: Competitive Programming
+  url: /cp/
+  excerpt: "All about algorithms, competitive programming, etc"
+  image: cp.png
+  
+- title: Cyber Security and CTF
+  url : /security/
+  excerpt: "All about security, ctf writeup from contest in ctftime.org etc"
+  image: security.jpg
