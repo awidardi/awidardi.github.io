@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: default
 categories: security
 title: [backdoorctf18] [Web 150 - bfcaptcha] 
 
