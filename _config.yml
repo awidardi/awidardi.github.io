@@ -1,6 +1,6 @@
 # Site wide configuration
 
-title: "Still null"
+title: "Gus Putin"
 description: "Also known as awidardi, gus_putin, Vidanz."
 logo: # 120x120 px default image used for Twitter summary card
 teaser: # 400x250 px default teaser image used in image archive grid
@@ -29,8 +29,8 @@ gems:
 owner:
   name: Ahmad Widardi
   email: awidardi@gmail.com
-  twitter:
-  google:
+  twitter: bangwidardi
+  google: 
     ad-client:
     ad-slot:
   bio:
@@ -61,5 +61,6 @@ exclude:
   - log
   - node_modules
   - package.json
+  - robots.txt
   - spec
   - tmp
