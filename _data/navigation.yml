@@ -5,7 +5,7 @@
   excerpt: "All about algorithms, competitive programming, etc"
   image: cp.png
   
-- title: Security
-  url : /security/
+- title: CTF
+  url : /ctf/
   excerpt: "All about cyber security, ctf writeup from contest in ctftime.org etc"
   image: security.jpg
