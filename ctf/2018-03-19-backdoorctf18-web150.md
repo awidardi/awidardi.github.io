@@ -1,8 +1,7 @@
 ---
-title: [backdoorctf18] Web 150 - bfcaptcha
-layout: article
+title: Web 150 bfcaptcha
+layout: media
 author: ahmad_widardi
-permalink: /ctf/2018-03-20-backdoorctf18-web150/
 ---
 
 ## A. Problem Description
