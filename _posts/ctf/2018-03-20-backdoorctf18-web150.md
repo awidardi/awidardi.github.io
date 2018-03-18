@@ -332,9 +332,9 @@ Please leave any comment, critics, or suggestion if you have something to say.
 ## E. References and Tools Used
 
 #### References
-* [PHP Assert] (http://php.net/manual/en/function.assert.php)
+* [PHP Assert] (http://php.net/manual/en/function.assert.php/)
 * [.git extracting tutorial](https://en.internetwache.org/dont-publicly-expose-git-or-how-we-downloaded-your-websites-sourcecode-an-analysis-of-alexas-1m-28-07-2015/)
-* [Code Injection] (https://www.owasp.org/index.php/Code_Injection)
+* [Code Injection] (https://www.owasp.org/index.php/Code_Injection/)
 
 #### Tools Used
 * Windows Subsytem for Linux Ubuntu
