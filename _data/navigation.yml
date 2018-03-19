@@ -1,5 +1,10 @@
 # Site navigation links
 
+- title: Home
+  url: /
+  excerpt: "Home"
+  image:
+
 - title: CP
   url: /cp/
   excerpt: "All about algorithms, competitive programming, etc"
@@ -9,3 +14,11 @@
   url : /ctf/
   excerpt: "All about cyber security, ctf writeup from contest in ctftime.org etc"
   image: security.jpg
+  
+- title: Software Development
+  url: /software-dev/
+  excerpt: "All about software engineering tech etc"
+  
+- title: Contact Me
+  url: /contact-me/
+  

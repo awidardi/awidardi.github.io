@@ -1,7 +1,8 @@
 ---
 title: Web 150 bfcaptcha
 layout: media
-author: ahmad_widardi
+author: awidardi
+comments: true
 ---
 
 ## A. Problem Description

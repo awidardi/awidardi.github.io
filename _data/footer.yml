@@ -2,5 +2,18 @@
 
 - title: Home
   url: /
+  image:
+
+- title: CP
+  url: /cp/
+  image: cp.png
   
-- title: 
+- title: CTF
+  url : /ctf/
+  image: security.jpg
+  
+- title: Software Development
+  url: /software-dev/
+  
+- title: Contact Me
+  url: /contact-me/
